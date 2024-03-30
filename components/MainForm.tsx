@@ -200,7 +200,7 @@ const handlePrint = useReactToPrint({
     <SelectValue placeholder="" />
   </SelectTrigger>
   <SelectContent >
-     {availableCars.map(car => <SelectItem  value={car.id} >
+     {availableCars.map(car => <SelectItem  key={car.id} value={car.id} >
         {`${car.make} ${car.model}`}
       </SelectItem>)}
   </SelectContent>
