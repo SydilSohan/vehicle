@@ -68,7 +68,7 @@ export function TableDemo({ allCharges }: { allCharges: AllCharges}) {
                         {allCharges?.collision && (
                                 <TableRow>
                                         <TableCell>Collison</TableCell>
-                                        <TableCell>1</TableCell>
+                                        <TableCell></TableCell>
                                         <TableCell>$9.00</TableCell>
                                         <TableCell className="text-right">${allCharges.collision}</TableCell>
                                 </TableRow>

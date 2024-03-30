@@ -98,7 +98,7 @@ const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
   return (
-    <div className='mx-auto flex flex-col self-center justify-self-center'>
+    <div className='mx-auto flex flex-col self-center justify-self-center m-2 '>
           <div className="flex flex-row justify-between items-center w-full">
 
 <h2>Reservation</h2>
@@ -106,9 +106,9 @@ const handlePrint = useReactToPrint({
   Print/Download
 </Button>
 </div>
-        <form className="w-full space-y-6 flex flex-nowrap gap-4">
+        <form className="w-full  space-y-6 flex flex-wrap lg:flex-nowrap gap-4">
 
-<div className='flex flex-row gap-4 flex-shrink items-start'>
+<div className='flex flex-col lg:flex-row gap-4 flex-shrink items-start'>
 <div className='flex flex-col gap-4 flex-1  '>
 <Card>
     <CardHeader>
@@ -146,7 +146,7 @@ const handlePrint = useReactToPrint({
         />
     </label>
     <label className="flex flex-row gap-4 items-center">
-        <p className="text-lg font-semibold mb-2 mt-4" >Duration</p>
+        <p className="text-lg font-semibold mb-2 mt-4" >Discount</p>
         <Input className='min-w-56'
             type="text"
             value={`${duration.weeks} weeks, ${duration.days} days, ${duration.hours} hours`}
@@ -171,7 +171,7 @@ const handlePrint = useReactToPrint({
         <CardContent>
         <label>
             <p className="text-lg font-semibold mb-2 mt-4" >Vehicle Type  <span className="mx-2 text-red-600">*</span></p>
-            <Select defaultValue='Sedan' onValueChange={handleChange} >
+            <Select  onValueChange={handleChange} >
   <SelectTrigger className="w-[180px]">
     <SelectValue placeholder="" />
   </SelectTrigger>
