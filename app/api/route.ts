@@ -12,16 +12,23 @@ function calculateCharges(selectedCar: Car, duration: any, formValues: FormValue
     allCharges = { ...allCharges, totalDaily, totalHourly, totalWeekly, total, duration,  discount: formValues.discount, hourly: selectedCar.rates.hourly, daily: selectedCar.rates.daily, weekly: selectedCar.rates.weekly};
 
     if (formValues.additionalCharges.collision) {
-        allCharges = { ...allCharges, collision: 9.00, total : total + 9.00}
+        const collision = 9.00
+        allCharges = { ...allCharges, collision, total : total + collision}
     }
     if (formValues.additionalCharges.liability) {
-        allCharges = { ...allCharges, liability: 15.00, total : total + 15.00}
+        const liability = 15.00
+        allCharges = { ...allCharges, liability, total : total + liability}
     }
     if (formValues.additionalCharges.rental) {
         const rental = total * 0.115; // 11.5% of the total
         allCharges = { ...allCharges, rental , total : total + rental}
     }
-
+    if (formValues.discount) { 
+        const discountPercentage = parseInt(formValues.discount);
+        const discountedAmount = total * (discountPercentage / 100);
+        total = total - discountedAmount;
+        allCharges = { ...allCharges, discountPercentage, total }
+    }
     return allCharges;
 }
 
@@ -41,9 +48,7 @@ export async function POST(request: Request) {
         const selectedCar = data.find(car => car.id === formValues.vehicleId);
         if (!selectedCar) return NextResponse.json({ message: "car not found" });
 
-        const hourly = selectedCar.rates.hourly;
-        const daily = selectedCar.rates.daily;
-        const weekly = selectedCar.rates.weekly;
+ 
         const allCharges = calculateCharges(selectedCar, duration, formValues)
         return NextResponse.json({ allCharges });
 

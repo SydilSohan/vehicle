@@ -19,15 +19,13 @@ const MainForm = ({cars}: Props) => {
 const [returnDate, setReturnDate] = React.useState<Date | null>(null);
 
 const duration = useMemo(() => {
-    if (pickupDate && returnDate) {
-        if (pickupDate.getTime() > returnDate.getTime()) {
+    if (formValues?.pickupDate && formValues.returnDate) {
+        if (formValues.pickupDate.getTime() > formValues.returnDate.getTime()) {
             alert("Pickup date cannot be in the future of return date");
-            setPickupDate(null);
-            setReturnDate(null);
             return { weeks: 0, days: 0, hours: 0 };
         }
 
-        const diffTime = Math.abs(returnDate.getTime() - pickupDate.getTime());
+        const diffTime = Math.abs(formValues.returnDate.getTime() - formValues.pickupDate.getTime());
         const diffHoursTotal = Math.floor(diffTime / (1000 * 60 * 60));
         const diffDays = Math.floor(diffHoursTotal / 24);
         const diffWeeks = Math.floor(diffDays / 7);
@@ -37,15 +35,21 @@ const duration = useMemo(() => {
         return { weeks: diffWeeks, days: remainingDays, hours: diffHours };
     }
     return { weeks: 0, days: 0, hours: 0 };
-}, [pickupDate, returnDate]);
+}, [formValues?.pickupDate, formValues?.returnDate]);
 const [availableCars, setAvailableCars] = React.useState<CarsList>([])
-const handleChange = (e: any) => {
+const handleVehicleTypeChange = (e: any) => {
     console.log(e)
     const selectedCars = cars.filter(car => car.type.toLowerCase() === e.toLowerCase())
     setAvailableCars(selectedCars)
 }
 const handleFormChange = (e : React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
+    if (e.target.type === 'datetime-local') {
+     setFormValues((prev) => ({
+        ...prev,
+        [e.target.name]: new Date(e.target.value)
+    }) as FormValues);
+    return;
+    }
     if (e.target.type === 'checkbox') {
         if (e.target.checked) {     
         setFormValues((prev) => ({
@@ -55,6 +59,7 @@ const handleFormChange = (e : React.ChangeEvent<HTMLInputElement>) => {
                 [e.target.name]: true
             }
         }) as FormValues);
+        return
     }  else {
         setFormValues((prev) => ({
             ...prev,
@@ -63,7 +68,7 @@ const handleFormChange = (e : React.ChangeEvent<HTMLInputElement>) => {
                 [e.target.name]: false
             }
         }) as FormValues);
-    
+    return
     }
 
 } 
@@ -76,7 +81,7 @@ setFormValues((prev) => ({
 
 
 useEffect(() => {
-
+    if(!formValues?.vehicleId) return;
     const getSummery = async () => {
         const response = await fetch('/api', {
             method: 'POST',
@@ -85,13 +90,10 @@ useEffect(() => {
         })
         const data = await response.json()
         setAllCharges(data.allCharges)
-        console.log(allCharges)
     }
     getSummery()
 }, 
-
-
-[formValues?.vehicleId, duration, formValues?.additionalCharges])
+[formValues?.vehicleId, duration, formValues?.additionalCharges, formValues?.discount])
 
 
 const handlePrint = useReactToPrint({
@@ -130,23 +132,21 @@ const handlePrint = useReactToPrint({
         <input  type="datetime-local"
             className="resize-none"
             name="pickupDate"
-            onChange={(e) => setPickupDate(new Date(e.target.value))}
+            onChange={handleFormChange}
             required
         />
     </label>
     <label>
         <p className="text-lg font-semibold mb-2 mt-4" >Return Date <span className="mx-2 text-red-600">*</span></p>
         <input type="datetime-local"
-            onChange={(e) => {
-                setReturnDate(new Date(e.target.value));
-            }}
+            onChange={handleFormChange}
             className="resize-none"
             name="returnDate"
             required
         />
     </label>
     <label className="flex flex-row gap-4 items-center">
-        <p className="text-lg font-semibold mb-2 mt-4" >Discount</p>
+        <p className="text-lg font-semibold mb-2 mt-4" >Duration</p>
         <Input className='min-w-56'
             type="text"
             value={`${duration.weeks} weeks, ${duration.days} days, ${duration.hours} hours`}
@@ -154,7 +154,7 @@ const handlePrint = useReactToPrint({
         />
     </label>
     <label className="flex flex-row gap-4 items-center">
-        <p className="text-lg font-semibold mb-2 mt-4" >Duration</p>
+        <p className="text-lg font-semibold mb-2 mt-4" >Discount</p>
         <Input className='min-w-56'
             type="number"
             name='discount'
@@ -165,13 +165,13 @@ const handlePrint = useReactToPrint({
     </CardContent>
 </Card><Card>
         <CardHeader>
-        <h3 className="border-b-2 border-purple-700">Vehicle Details Details</h3>
+        <h3 className="border-b-2 border-purple-700">Vehicle  Details</h3>
 
         </CardHeader>
         <CardContent>
         <label>
             <p className="text-lg font-semibold mb-2 mt-4" >Vehicle Type  <span className="mx-2 text-red-600">*</span></p>
-            <Select  onValueChange={handleChange} >
+            <Select  onValueChange={handleVehicleTypeChange} >
   <SelectTrigger className="w-[180px]">
     <SelectValue placeholder="" />
   </SelectTrigger>

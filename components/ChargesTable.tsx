@@ -57,12 +57,12 @@ export function TableDemo({ allCharges }: { allCharges: AllCharges}) {
                                 </TableRow>
                         )}
                       
-                        {allCharges?.discount > 0 && (
+                        {allCharges?.discountPercentage  && (
                                 <TableRow>
                                         <TableCell>Discount</TableCell>
                                         <TableCell></TableCell>
-                                        <TableCell>{allCharges.discount}</TableCell>
-                                        <TableCell className="text-right">-${allCharges.discountPercentage}</TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell className="text-right">-{allCharges.discountPercentage}%</TableCell>
                                 </TableRow>
                         )}
                         {allCharges?.collision && (

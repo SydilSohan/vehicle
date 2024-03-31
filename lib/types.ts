@@ -26,8 +26,8 @@ export type FormValues = {
         rental?: boolean;
 
     };
-    pickupDate: string;
-    returnDate: string;
+    pickupDate: Date
+    returnDate: Date;
     vehicleType: string;
     vehicleId: string;
 
