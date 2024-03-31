@@ -15,9 +15,7 @@ const MainForm = ({cars}: Props) => {
     const componentRef = React.useRef(null);
     const [formValues, setFormValues] = useState<FormValues>()
     const [allCharges, setAllCharges] = useState<AllCharges>()
-    const [pickupDate, setPickupDate] = React.useState<Date | null>(null);
-const [returnDate, setReturnDate] = React.useState<Date | null>(null);
-
+    
 const duration = useMemo(() => {
     if (formValues?.pickupDate && formValues.returnDate) {
         if (formValues.pickupDate.getTime() > formValues.returnDate.getTime()) {
